@@ -40,7 +40,7 @@ mod impl_num_traits {
     use core::num::FpCategory;
     use core::ops::{Add, Div, Mul, Neg, Rem, Sub};
     use num_traits::float::FloatCore;
-    use num_traits::{Float, FloatConst, FromPrimitive, Num, NumCast, One, ToPrimitive, Zero};
+    use num_traits::{Float, FloatConst, FromPrimitive, Num, NumCast, One, Pow, ToPrimitive, Zero};
 
     impl ToPrimitive for f16 {
         fn to_i64(&self) -> Option<i64> {
@@ -180,6 +180,25 @@ mod impl_num_traits {
 
         fn rem(self, rhs: Self) -> Self::Output {
             Self::from_f32(Self::to_f32(self) % Self::to_f32(rhs))
+        }
+    }
+
+    impl Pow<f16> for f16 {
+        type Output = Self;
+
+        fn pow(self, rhs: Self) -> Self::Output {
+            Self::from_f32(Self::to_f32(self).pow(Self::to_f32(rhs)))
+        }
+    }
+
+    impl<T> Pow<T> for f16
+    where
+        f32: Pow<T, Output = f32>,
+    {
+        type Output = Self;
+
+        fn pow(self, rhs: T) -> Self::Output {
+            Self::from_f32(Self::to_f32(self).pow(rhs))
         }
     }
 
